@@ -35,9 +35,20 @@ alter table users
 insert into rooms (id, name) VALUES
    (1, 'Большая красная переговорка'),
    (2, 'Кухня'),
-   (3, 'Туалет');
+   (3, 'Игровая'),
+   (4, 'Холл'),
+   (5, 'Туалет');
 
-insert into users (id, room_id) VALUES
-  (1, null ),
-  (2, null ),
-  (3, null );
+CREATE ALIAS ADDUSERS AS $$
+int addTestData(java.sql.Connection con, long maxCountUser) throws Exception {
+    int cnt = 0;
+    Statement statement = con.createStatement();
+    for (int i = 0; i <= maxCountUser; i++) {
+        statement.executeUpdate("insert into users (id, room_id) VALUES (" + i + ", null )");
+        cnt++;
+    }
+    return cnt;
+}
+$$;
+
+CALL ADDUSERS(10000);

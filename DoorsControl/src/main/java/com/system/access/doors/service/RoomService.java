@@ -17,7 +17,7 @@ public interface RoomService {
     boolean checkEnterRoom(Long roomId, Long keyId);
 
     /**
-     * Метод проверки прав доступа для входа в комнату.
+     * Метод проверки прав доступа для выходы из комнаты.
      *
      * @param roomId идентификатор комнаты
      * @param keyId идентификатор пользователя

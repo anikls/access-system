@@ -44,7 +44,7 @@ public class DefaultRoomService implements RoomService {
             throw new CheckException("the user has not left the room yet");
         }
 
-        if (roomId % keyId == 0) {
+        if (keyId % roomId == 0) {
            // Если проверки прошли, пускаем пользователя в комнату
            user.enterToRoom(roomId);
            userRepository.save(user);
