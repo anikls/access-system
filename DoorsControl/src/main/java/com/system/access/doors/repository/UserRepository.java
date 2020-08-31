@@ -1,6 +1,6 @@
 package com.system.access.doors.repository;
 
-import com.system.access.doors.domain.User;
+import com.system.access.doors.entities.domain.User;
 import org.springframework.data.repository.CrudRepository;
 
 /**

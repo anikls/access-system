@@ -1,4 +1,4 @@
-package com.system.access.doors.domain;
+package com.system.access.doors.entities.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

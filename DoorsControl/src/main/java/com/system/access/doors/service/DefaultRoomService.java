@@ -1,7 +1,8 @@
 package com.system.access.doors.service;
 
-import com.system.access.doors.domain.Room;
-import com.system.access.doors.domain.User;
+import com.system.access.doors.entities.domain.Room;
+import com.system.access.doors.entities.domain.User;
+import com.system.access.doors.entities.dto.AccessInfoDto;
 import com.system.access.doors.exception.CheckException;
 import com.system.access.doors.exception.RoomNotFoundException;
 import com.system.access.doors.exception.UserNotFoundException;
@@ -27,15 +28,21 @@ public class DefaultRoomService implements RoomService {
     private final UserRepository userRepository;
 
     @Override
-    public boolean checkEnterRoom(Long roomId, Long keyId) {
+    public AccessInfoDto checkEnterRoom(Long roomId, Long keyId) {
 
         log.debug("check enter in room #{} by reyId#{}", roomId, keyId);
 
         // Проверка введеных значений на наличие в БД
         final Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new RoomNotFoundException(roomId));
+                .orElseThrow(() -> {
+                    log.warn("Room #{} not found", roomId);
+                    return new RoomNotFoundException();
+                });
         final User user = userRepository.findById(keyId)
-                .orElseThrow(() -> new UserNotFoundException(keyId));
+                .orElseThrow(() -> {
+                    log.warn("User #{} not found", keyId);
+                    return new UserNotFoundException();
+                });
 
         // Впустить в комнату можем, если
         // 1. пользователь уже находится в комнате
@@ -48,21 +55,38 @@ public class DefaultRoomService implements RoomService {
            // Если проверки прошли, пускаем пользователя в комнату
            user.enterToRoom(roomId);
            userRepository.save(user);
-           return true;
+
+           return AccessInfoDto.builder()
+                   .room(room)
+                   .user(user)
+                   .msg("access to enter is allowed")
+                   .accessed(true)
+                   .build();
         } else {
-            return false;
+            return AccessInfoDto.builder()
+                    .room(room)
+                    .user(user)
+                    .msg("Access is denied")
+                    .accessed(false)
+                    .build();
         }
     }
 
     @Override
-    public boolean checkExitRoom(Long roomId, Long keyId) {
+    public AccessInfoDto checkExitRoom(Long roomId, Long keyId) {
         log.debug("check exit from room #{} by reyId#{}", roomId, keyId);
 
         // Проверка введеных значений на наличие в БД
         final Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new RoomNotFoundException(roomId));
+                .orElseThrow(() -> {
+                    log.warn("Room #{} not found", roomId);
+                    return new RoomNotFoundException();
+                });
         final User user = userRepository.findById(keyId)
-                .orElseThrow(() -> new UserNotFoundException(keyId));
+                .orElseThrow(() -> {
+                    log.warn("User #{} not found", keyId);
+                    return new UserNotFoundException();
+                });
 
         // Выпустить из комнаты можем только тех пользователей, которые
         // 1. уже вошли в комнату
@@ -77,6 +101,11 @@ public class DefaultRoomService implements RoomService {
         user.exitFromRoom();
         userRepository.save(user);
 
-        return true;
+        return AccessInfoDto.builder()
+                .room(room)
+                .user(user)
+                .msg("access to exit is allowed")
+                .accessed(true)
+                .build();
     }
 }

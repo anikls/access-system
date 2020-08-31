@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Slf4j
 @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR, reason = "user not found")
 public class UserNotFoundException extends RuntimeException {
-    public UserNotFoundException(Long userId) {
+    public UserNotFoundException() {
         super();
-        log.warn("User #{} not found", userId);
     }
 }

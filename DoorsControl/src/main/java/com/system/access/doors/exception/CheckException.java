@@ -9,11 +9,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  *
  * @author anikls
  */
-@Slf4j
 @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
 public class CheckException extends RuntimeException {
     public CheckException(String errorMsg) {
         super(errorMsg);
-        log.warn(errorMsg);
     }
 }

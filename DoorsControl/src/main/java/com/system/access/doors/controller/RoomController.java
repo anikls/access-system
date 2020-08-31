@@ -1,5 +1,6 @@
 package com.system.access.doors.controller;
 
+import com.system.access.doors.entities.dto.AccessInfoDto;
 import com.system.access.doors.service.RoomService;
 
 import lombok.RequiredArgsConstructor;
@@ -40,26 +41,28 @@ public class RoomController {
      * @return Статус 200 - доступ к двери разрешен
      */
     @GetMapping("/check")
-    public ResponseEntity<String> checkDoor(@RequestParam("roomId") Long roomId,
-                                    @RequestParam("keyId") Long keyId,
-                                    @RequestParam("entrance") boolean entrance) {
+    public ResponseEntity<AccessInfoDto> checkDoor(@RequestParam("roomId") Long roomId,
+                                                   @RequestParam("keyId") Long keyId,
+                                                   @RequestParam("entrance") boolean entrance) {
 
         log.info("Room #{} verification request by user #{} for {}", roomId, keyId, entrance?"enter":"exit");
 
+        AccessInfoDto accessInfoDto;
         if (entrance) {
-            if (roomService.checkEnterRoom(roomId, keyId)) {
+            accessInfoDto = roomService.checkEnterRoom(roomId, keyId);
+            if (accessInfoDto.isAccessed()) {
                 log.info("Enter to room #{} by user #{} assessed", roomId, keyId);
-                return ResponseEntity.ok("access to enter is allowed");
+                return ResponseEntity.ok(accessInfoDto);
             }
         } else {
-            if (roomService.checkExitRoom(roomId, keyId)) {
+            accessInfoDto = roomService.checkExitRoom(roomId, keyId);
+            if (accessInfoDto.isAccessed()) {
                 log.info("Exit from room #{} by user #{} assessed", roomId, keyId);
-                return ResponseEntity.ok("access to exit is allowed");
+                return ResponseEntity.ok(accessInfoDto);
             }
         }
 
         log.warn("Room #{} by user #{} for {} forbidden", roomId, keyId, entrance?"enter":"exit");
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-
     }
 }

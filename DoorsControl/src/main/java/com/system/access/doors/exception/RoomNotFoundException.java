@@ -9,11 +9,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  *
  * @author anikls
  */
-@Slf4j
 @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR, reason = "room not found")
 public class RoomNotFoundException extends RuntimeException {
-    public RoomNotFoundException(Long roomId) {
-        super("Room #{} not found");
-        log.warn("Room #{} not found", roomId);
+    public RoomNotFoundException() {
+        super("Room not found");
     }
 }

@@ -1,7 +1,7 @@
 package com.system.access.doors.service;
 
-import com.system.access.doors.domain.Room;
-import com.system.access.doors.domain.User;
+import com.system.access.doors.entities.domain.Room;
+import com.system.access.doors.entities.domain.User;
 import com.system.access.doors.exception.CheckException;
 import com.system.access.doors.exception.RoomNotFoundException;
 import com.system.access.doors.exception.UserNotFoundException;
@@ -80,7 +80,7 @@ public class RoomServiceTest {
         final long idUser = 2L;
         when(roomRepository.findById(idRoom)).thenReturn(Optional.of(new Room(idRoom, "room")));
         when(userRepository.findById(idUser)).thenReturn(Optional.of(new User(idUser, null)));
-        assertThat(roomService.checkEnterRoom(idRoom, idUser)).isTrue();
+        assertThat(roomService.checkEnterRoom(idRoom, idUser).isAccessed()).isTrue();
     }
 
     @Test
@@ -89,7 +89,7 @@ public class RoomServiceTest {
         final long idUser = 3L;
         when(roomRepository.findById(idRoom)).thenReturn(Optional.of(new Room(idRoom, "room")));
         when(userRepository.findById(idUser)).thenReturn(Optional.of(new User(idUser, null)));
-        assertThat(roomService.checkEnterRoom(idRoom, idUser)).isFalse();
+        assertThat(roomService.checkEnterRoom(idRoom, idUser).isAccessed()).isFalse();
     }
 
     @Test
@@ -150,6 +150,6 @@ public class RoomServiceTest {
         final long idUser = 1L;
         when(roomRepository.findById(idRoom)).thenReturn(Optional.of(new Room(idRoom, "room")));
         when(userRepository.findById(idUser)).thenReturn(Optional.of(new User(idUser, idRoom)));
-        assertThat(roomService.checkExitRoom(idRoom, idUser)).isTrue();
+        assertThat(roomService.checkExitRoom(idRoom, idUser).isAccessed()).isTrue();
     }
 }

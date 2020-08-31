@@ -1,5 +1,7 @@
 package com.system.access.doors.service;
 
+import com.system.access.doors.entities.dto.AccessInfoDto;
+
 /**
  * Сервис пропускной системы.
  *
@@ -12,16 +14,16 @@ public interface RoomService {
      *
      * @param roomId идентификатор комнаты
      * @param keyId идентификатор пользователя
-     * @return true - доступ разрешен, false - доступ запрещен
+     * @return разрешение системы безопасности
      */
-    boolean checkEnterRoom(Long roomId, Long keyId);
+    AccessInfoDto checkEnterRoom(Long roomId, Long keyId);
 
     /**
      * Метод проверки прав доступа для выходы из комнаты.
      *
      * @param roomId идентификатор комнаты
      * @param keyId идентификатор пользователя
-     * @return true - доступ разрешен, false - доступ запрещен
+     * @return разрешение системы безопасности
      */
-    boolean checkExitRoom(Long roomId, Long keyId);
+    AccessInfoDto checkExitRoom(Long roomId, Long keyId);
 }
