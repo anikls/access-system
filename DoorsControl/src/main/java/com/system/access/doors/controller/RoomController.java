@@ -47,22 +47,19 @@ public class RoomController {
 
         log.info("Room #{} verification request by user #{} for {}", roomId, keyId, entrance?"enter":"exit");
 
-        AccessInfoDto accessInfoDto;
-        if (entrance) {
-            accessInfoDto = roomService.checkEnterRoom(roomId, keyId);
-            if (accessInfoDto.isAccessed()) {
-                log.info("Enter to room #{} by user #{} assessed", roomId, keyId);
-                return ResponseEntity.ok(accessInfoDto);
-            }
-        } else {
-            accessInfoDto = roomService.checkExitRoom(roomId, keyId);
-            if (accessInfoDto.isAccessed()) {
-                log.info("Exit from room #{} by user #{} assessed", roomId, keyId);
-                return ResponseEntity.ok(accessInfoDto);
-            }
+        final AccessInfoDto accessInfoDto = entrance
+                ?roomService.checkEnterRoom(roomId, keyId)
+                :roomService.checkExitRoom(roomId, keyId);
+
+        if (accessInfoDto.isAccessed()) {
+            log.info("Enter to #{} by #{} assessed",
+                    entrance?"enter":"exit", accessInfoDto.getRoom(), accessInfoDto.getUser());
+            return ResponseEntity.ok(accessInfoDto);
         }
 
-        log.warn("Room #{} by user #{} for {} forbidden", roomId, keyId, entrance?"enter":"exit");
+        log.warn("#{} by #{} for {} forbidden",
+                accessInfoDto.getRoom(), accessInfoDto.getUser(), entrance?"enter":"exit");
+
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 }

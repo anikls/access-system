@@ -48,6 +48,7 @@ public class DefaultRoomService implements RoomService {
         // 1. пользователь уже находится в комнате
         // 2. проходит основное условие "Пользователю можно входить только в те помещения, на номер которого делится его ид"
         if (Objects.nonNull(user.getRoomId())) {
+            log.warn("#{} has not left the #{} yet", user, room);
             throw new CheckException("the user has not left the room yet");
         }
 
@@ -92,9 +93,11 @@ public class DefaultRoomService implements RoomService {
         // 1. уже вошли в комнату
         // 2. находятся в той же комнате, что указана в запросе
         if (Objects.isNull(user.getRoomId())) {
+            log.warn("#{} has not entered the room #{} yet", user, room);
             throw new CheckException("the user has not entered the room yet");
         }
         if (!user.getRoomId().equals(roomId)) {
+            log.warn("#{} is in another room {}", user, user.getRoomId());
             throw new CheckException("the user is in another room");
         }
         // Если все проверки прошли успешно, выпускаем пользователя из комнаты
