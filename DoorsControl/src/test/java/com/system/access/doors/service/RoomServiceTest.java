@@ -45,7 +45,7 @@ public class RoomServiceTest {
                 = catchThrowable(() -> roomService.checkEnterRoom(idRoom, idUser));
         assertThat(throwable)
                 .isNotNull()
-                .isInstanceOf(RoomNotFoundException.class);
+                .isInstanceOf(CheckException.class);
     }
 
     @Test
@@ -58,7 +58,7 @@ public class RoomServiceTest {
                 = catchThrowable(() -> roomService.checkEnterRoom(idRoom, idUser));
         assertThat(throwable)
                 .isNotNull()
-                .isInstanceOf(UserNotFoundException.class);
+                .isInstanceOf(CheckException.class);
     }
 
     @Test
@@ -76,8 +76,8 @@ public class RoomServiceTest {
 
     @Test
     public void checkEnterUserMustReturnTrue() {
-        final long idRoom = 10L;
-        final long idUser = 2L;
+        final long idRoom = 2L;
+        final long idUser = 10L;
         when(roomRepository.findById(idRoom)).thenReturn(Optional.of(new Room(idRoom, "room")));
         when(userRepository.findById(idUser)).thenReturn(Optional.of(new User(idUser, null)));
         assertThat(roomService.checkEnterRoom(idRoom, idUser).isAccessed()).isTrue();
@@ -85,8 +85,8 @@ public class RoomServiceTest {
 
     @Test
     public void checkEnterUserMustReturnFalse() {
-        final long idRoom = 10L;
-        final long idUser = 3L;
+        final long idRoom = 3L;
+        final long idUser = 10L;
         when(roomRepository.findById(idRoom)).thenReturn(Optional.of(new Room(idRoom, "room")));
         when(userRepository.findById(idUser)).thenReturn(Optional.of(new User(idUser, null)));
         assertThat(roomService.checkEnterRoom(idRoom, idUser).isAccessed()).isFalse();
@@ -102,7 +102,7 @@ public class RoomServiceTest {
                 = catchThrowable(() -> roomService.checkExitRoom(idRoom, idUser));
         assertThat(throwable)
                 .isNotNull()
-                .isInstanceOf(RoomNotFoundException.class);
+                .isInstanceOf(CheckException.class);
     }
 
     @Test
@@ -115,7 +115,7 @@ public class RoomServiceTest {
                 = catchThrowable(() -> roomService.checkExitRoom(idRoom, idUser));
         assertThat(throwable)
                 .isNotNull()
-                .isInstanceOf(UserNotFoundException.class);
+                .isInstanceOf(CheckException.class);
     }
 
     @Test
